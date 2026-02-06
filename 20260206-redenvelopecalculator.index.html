@@ -1,0 +1,2744 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>農曆新年紅包換新鈔計算器</title>
+    <!--
+    ==========================================
+    農曆新年紅包換新鈔計算器
+    協作者: Ching & Claude
+    ==========================================
+    
+    版本歷程:
+    
+    v1.8.0 (2025-02-05)
+    - 新增: 列印功能(產生專業列印格式,可列印統計表格)
+    - 新增: 快速複製功能(一鍵複製紅包資料到輸入欄位)
+    - 新增: 搜尋/篩選功能(即時搜尋送禮人或收禮人)
+    - 新增: 排序功能(依送禮人/收禮人/金額排序)
+    - 新增: 金額範本(常用金額快速選擇:600/1000/1200/1600/2000/3600/6000)
+    - 優化: 快速複製後自動捲動到輸入區域
+    - 優化: 搜尋/篩選時保持原始索引正確性
+    - 優化: 列印格式包含使用說明和日期時間
+    
+    v1.7.1 (2025-02-05)
+    - 新增: 資料數量即時顯示(已有 X 筆)
+    - 新增: 清空全部按鈕(快速清除所有紅包資料)
+    - 新增: 隱私保證說明區塊(藍色提示框)
+    - 新增: localStorage隱私性說明文件
+    - 確認: localStorage資料完全隔離,不同使用者/裝置絕對看不到彼此資料
+    - 優化: 清空全部時會提示筆數並確認
+    - 優化: 清空時不影響已儲存的資料
+    
+    v1.7.0 (2025-02-05)
+    - 新增: 匯出純文字功能(可複製分享給他人)
+    - 新增: 匯出Excel功能(含4個工作表:明細、送禮人統計、收禮人統計、總計)
+    - 新增: 自動儲存功能(使用localStorage)
+    - 新增: 手動儲存/載入/清除按鈕
+    - 新增: 頁面自動載入上次儲存的資料
+    - 依賴: 引入SheetJS(xlsx.js)函式庫
+    
+    v1.6.1 (2025-02-05)
+    - 修正: 所有範例文字從「王大明」改為「呂小青」
+    - 優化: 稱謂提醒文字更清楚說明關係性問題
+    - 優化: 輸入欄位範例更新(呂小青、陳阿嬤、李伯伯)
+    - 更新: 計算邏輯說明文件中的所有範例
+    
+    v1.6.0 (2025-02-05)
+    - 新增: 5元硬幣選項
+    - 新增: 收禮人統計區域(累計來自不同送禮人的金額與明細)
+    - 新增: 稱謂提醒區塊(提醒使用者注意稱謂正確性)
+    - 優化: 收禮人統計採用與送禮人統計相同的黑白配色
+    - 優化: 所有計算邏輯加入5元硬幣支援
+    
+    v1.5.0 (2025-02-05)
+    - 重要: 調整自動計算邏輯,優先使用常用面額 (1000、500、100)
+    - 優化: 避免自動使用較少流通的 2000、200 元
+    - 優化: 面額輸入欄位重新排序,常用面額標示⭐
+    - 更新: 計算邏輯說明文件,增加台灣面額使用習慣說明
+    - 優化: 更貼近台灣實際用鈔習慣
+    
+    v1.4.0 (2025-02-05)
+    - 新增: 「使用此金額」按鈕,支援兩種新增紅包方式
+    - 新增: 必填欄位驗證提示(手機/PC皆適用)
+    - 新增: 面額計算邏輯說明文件
+    - 優化: 改進表單驗證,加入focus焦點引導
+    - 優化: 小計區域加入藍色「使用此金額」按鈕
+    - 新增: 面額指定說明文字(黃色提示框)
+    
+    v1.3.1 (2025-02-05)
+    - 修正: 優化響應式設計,修正手機版欄位超出問題
+    - 優化: 新增480px斷點,完整支援小螢幕手機
+    - 優化: 面額輸入欄改為橫向排列(手機版)
+    - 優化: 所有字體大小和間距針對手機優化
+    - 修正: iOS輸入框自動縮放問題
+    
+    v1.3.0 (2025-02-05)
+    - 新增: 協作者資訊與版本追蹤系統
+    - 優化: 送禮人統計區塊改為黑白配色設計
+    - 新增: 指定面額即時小計功能
+    - 新增: 送禮人統計中的紅包明細摘要
+    
+    v1.2.0 (2025-02-05)
+    - 新增: 各送禮人換鈔統計(並排顯示)
+    - 新增: 重複送禮人+收禮人確認提示
+    
+    v1.1.0 (2025-02-05)
+    - 新增: 送禮人欄位
+    - 新增: 硬幣面額支援(50元、10元、1元)
+    - 優化: 紙鈔/硬幣分類顯示
+    
+    v1.0.0 (2025-02-05)
+    - 初始版本
+    - 基本紅包計算功能
+    - 支援紙鈔面額(2000、1000、500、200、100元)
+    - 自動計算與手動指定面額
+    
+    ==========================================
+    -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft JhengHei", "微軟正黑體", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #ff6b6b;
+        }
+
+        .header h1 {
+            color: #c92a2a;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 12px;
+        }
+
+        .collaborators {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .collab-label,
+        .version-label {
+            font-weight: bold;
+            color: #495057;
+        }
+
+        .collab-names {
+            color: #c92a2a;
+            font-weight: 600;
+        }
+
+        .version-number {
+            color: #fff;
+            background: #51cf66;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .input-section {
+            background: #fff5f5;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border: 2px solid #ffc9c9;
+        }
+
+        .input-group {
+            display: grid;
+            grid-template-columns: 1.5fr 1.5fr 1.5fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: end;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #495057;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            padding: 12px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #ff6b6b;
+        }
+
+        .denomination-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .denomination-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px dashed #ffc9c9;
+        }
+
+        .section-title {
+            font-weight: bold;
+            color: #c92a2a;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+
+        .denomination-help-text {
+            font-size: 13px;
+            color: #495057;
+            background: #fff3cd;
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            border-left: 3px solid #ffc107;
+        }
+
+        .subtotal-container {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 15px;
+            align-items: center;
+            margin-top: 12px;
+        }
+
+        .subtotal-display {
+            background: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(64, 192, 87, 0.3);
+            border: 2px solid #37b24d;
+        }
+
+        .subtotal-label {
+            font-size: 13px;
+            margin-bottom: 4px;
+            opacity: 0.95;
+        }
+
+        .subtotal-amount {
+            font-size: 22px;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .btn-use-subtotal {
+            background: linear-gradient(135deg, #339af0 0%, #228be6 100%);
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(34, 139, 230, 0.3);
+            white-space: nowrap;
+        }
+
+        .btn-use-subtotal:hover:not(:disabled) {
+            background: linear-gradient(135deg, #228be6 0%, #1c7ed6 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(34, 139, 230, 0.4);
+        }
+
+        .btn-use-subtotal:disabled {
+            background: #adb5bd;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .denomination-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .denomination-item input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            font-size: 14px;
+        }
+
+        .denomination-item label {
+            margin: 0;
+            font-size: 13px;
+            text-align: center;
+            color: #495057;
+        }
+
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .btn-add {
+            background: #51cf66;
+            color: white;
+        }
+
+        .btn-add:hover {
+            background: #40c057;
+            transform: translateY(-2px);
+        }
+
+        .btn-remove {
+            background: #ff6b6b;
+            color: white;
+            padding: 8px 15px;
+            font-size: 14px;
+        }
+
+        .btn-remove:hover {
+            background: #fa5252;
+        }
+
+        .recipient-list {
+            margin-bottom: 25px;
+        }
+
+        .recipient-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border: 2px solid #e9ecef;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 20px;
+            align-items: start;
+        }
+
+        .recipient-info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #868e96;
+            min-width: 80px;
+        }
+
+        .info-value {
+            color: #212529;
+            font-size: 16px;
+        }
+
+        .amount-value {
+            color: #c92a2a;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .summary-section {
+            background: linear-gradient(135deg, #fa5252 0%, #c92a2a 100%);
+            padding: 30px;
+            border-radius: 15px;
+            color: white;
+            margin-top: 30px;
+        }
+
+        #giverSummary,
+        #recipientSummary {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            color: #212529;
+        }
+
+        #giverSummaryContent,
+        #recipientSummaryContent {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .giver-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid #dee2e6;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+        }
+
+        .giver-card:hover {
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+            border-color: #adb5bd;
+        }
+
+        .recipient-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid #dee2e6;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+        }
+
+        .recipient-card:hover {
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+            border-color: #adb5bd;
+        }
+
+        .recipient-name {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #212529;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .recipient-givers {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border: 1px solid #dee2e6;
+        }
+
+        .recipient-givers-title {
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #495057;
+            text-align: center;
+        }
+
+        .giver-summary {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #495057;
+            margin-bottom: 4px;
+        }
+
+        .giver-summary:last-child {
+            margin-bottom: 0;
+        }
+
+        .giver-summary-name {
+            font-weight: 600;
+            color: #212529;
+        }
+
+        .giver-summary-amount {
+            color: #c92a2a;
+            font-weight: bold;
+        }
+
+        .recipient-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .recipient-bill-section,
+        .recipient-coin-section {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        .recipient-category-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+            color: #495057;
+        }
+
+        .recipient-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+            gap: 8px;
+        }
+
+        .recipient-denom-item {
+            background: white;
+            padding: 8px 6px;
+            border-radius: 6px;
+            text-align: center;
+            border: 1px solid #dee2e6;
+        }
+
+        .recipient-denom-label {
+            font-size: 12px;
+            margin-bottom: 4px;
+            color: #6c757d;
+        }
+
+        .recipient-denom-count {
+            font-size: 18px;
+            font-weight: bold;
+            color: #212529;
+        }
+
+        .recipient-total {
+            background: #212529;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 12px;
+            border: 2px solid #495057;
+        }
+
+        .recipient-total-label {
+            font-size: 13px;
+            margin-bottom: 5px;
+            color: #adb5bd;
+        }
+
+        .recipient-total-amount {
+            font-size: 24px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .giver-name {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #212529;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .giver-recipients {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border: 1px solid #dee2e6;
+        }
+
+        .giver-recipients-title {
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #495057;
+            text-align: center;
+        }
+
+        .recipient-summary {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #495057;
+            margin-bottom: 4px;
+        }
+
+        .recipient-summary:last-child {
+            margin-bottom: 0;
+        }
+
+        .recipient-summary-name {
+            font-weight: 600;
+            color: #212529;
+        }
+
+        .recipient-summary-amount {
+            color: #c92a2a;
+            font-weight: bold;
+        }
+
+        .giver-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .giver-bill-section,
+        .giver-coin-section {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        .giver-category-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+            color: #495057;
+        }
+
+        .giver-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+            gap: 8px;
+        }
+
+        .giver-denom-item {
+            background: white;
+            padding: 8px 6px;
+            border-radius: 6px;
+            text-align: center;
+            border: 1px solid #dee2e6;
+        }
+
+        .giver-denom-label {
+            font-size: 12px;
+            margin-bottom: 4px;
+            color: #6c757d;
+        }
+
+        .giver-denom-count {
+            font-size: 18px;
+            font-weight: bold;
+            color: #212529;
+        }
+
+        .giver-total {
+            background: #212529;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 12px;
+            border: 2px solid #495057;
+        }
+
+        .giver-total-label {
+            font-size: 13px;
+            margin-bottom: 5px;
+            color: #adb5bd;
+        }
+
+        .giver-total-amount {
+            font-size: 24px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        @media (max-width: 1024px) {
+            #giverSummaryContent {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            #giverSummaryContent {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .summary-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .summary-categories {
+            display: grid;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .category-section {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .category-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+            color: #ffd43b;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+        }
+
+        .summary-card {
+            background: rgba(255,255,255,0.15);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .summary-denomination {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .summary-count {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ffd43b;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .summary-total {
+            background: rgba(255,255,255,0.25);
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 20px;
+            border: 3px solid rgba(255,255,255,0.5);
+        }
+
+        .total-label {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .total-amount {
+            font-size: 42px;
+            font-weight: bold;
+            color: #ffd43b;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+        }
+
+        .storage-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn-storage {
+            padding: 8px 16px;
+            border: 2px solid #dee2e6;
+            background: white;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #495057;
+        }
+
+        .btn-save {
+            border-color: #51cf66;
+            color: #2b8a3e;
+        }
+
+        .btn-save:hover {
+            background: #51cf66;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-load {
+            border-color: #339af0;
+            color: #1864ab;
+        }
+
+        .btn-load:hover {
+            background: #339af0;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-clear {
+            border-color: #ff6b6b;
+            color: #c92a2a;
+        }
+
+        .btn-clear:hover {
+            background: #ff6b6b;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .export-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-export {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .btn-export-text {
+            background: linear-gradient(135deg, #4dabf7 0%, #339af0 100%);
+            color: white;
+        }
+
+        .btn-export-text:hover {
+            background: linear-gradient(135deg, #339af0 0%, #228be6 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(51, 154, 240, 0.4);
+        }
+
+        .btn-export-excel {
+            background: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
+            color: white;
+        }
+
+        .btn-export-excel:hover {
+            background: linear-gradient(135deg, #40c057 0%, #37b24d 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(64, 192, 87, 0.4);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #868e96;
+            font-size: 18px;
+        }
+
+        .naming-reminder {
+            background: linear-gradient(135deg, #fff3cd 0%, #fff8e1 100%);
+            border: 2px solid #ffc107;
+            border-left: 5px solid #ff9800;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 25px 0;
+            display: flex;
+            gap: 15px;
+            box-shadow: 0 2px 8px rgba(255, 152, 0, 0.15);
+        }
+
+        .reminder-icon {
+            font-size: 32px;
+            flex-shrink: 0;
+        }
+
+        .reminder-content {
+            flex: 1;
+        }
+
+        .reminder-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #e65100;
+            margin-bottom: 8px;
+        }
+
+        .reminder-text {
+            font-size: 14px;
+            color: #5d4037;
+            line-height: 1.6;
+        }
+
+        .privacy-notice {
+            background: linear-gradient(135deg, #e3f2fd 0%, #e1f5fe 100%);
+            border: 2px solid #2196f3;
+            border-left: 5px solid #1976d2;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 25px 0;
+            display: flex;
+            gap: 15px;
+            box-shadow: 0 2px 8px rgba(33, 150, 243, 0.15);
+        }
+
+        .privacy-icon {
+            font-size: 32px;
+            flex-shrink: 0;
+        }
+
+        .privacy-content {
+            flex: 1;
+        }
+
+        .privacy-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #0d47a1;
+            margin-bottom: 8px;
+        }
+
+        .privacy-text {
+            font-size: 14px;
+            color: #1565c0;
+            line-height: 1.6;
+        }
+
+        .btn-clear-all {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-clear-all:hover {
+            background: #fa5252;
+            transform: translateY(-2px);
+        }
+
+        .amount-templates {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        .btn-template {
+            background: #f1f3f5;
+            border: 1px solid #dee2e6;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #495057;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-template:hover {
+            background: #51cf66;
+            color: white;
+            border-color: #51cf66;
+            transform: scale(1.05);
+        }
+
+        .search-filter-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 2px solid #e9ecef;
+        }
+
+        .search-filter-controls {
+            display: grid;
+            gap: 15px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: border-color 0.3s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #339af0;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-filter {
+            padding: 10px 16px;
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #495057;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-filter:hover {
+            background: #f8f9fa;
+            border-color: #adb5bd;
+        }
+
+        .btn-filter.active {
+            background: #339af0;
+            color: white;
+            border-color: #339af0;
+        }
+
+        .btn-copy {
+            background: #4dabf7;
+            color: white;
+            padding: 8px 15px;
+            font-size: 14px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-copy:hover {
+            background: #339af0;
+        }
+
+        .btn-export-print {
+            background: linear-gradient(135deg, #9775fa 0%, #845ef7 100%);
+            color: white;
+        }
+
+        .btn-export-print:hover {
+            background: linear-gradient(135deg, #845ef7 0%, #7950f2 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(132, 94, 247, 0.4);
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #printArea, #printArea * {
+                visibility: visible;
+            }
+            #printArea {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 15px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .header p {
+                font-size: 14px;
+            }
+
+            .collaborators {
+                font-size: 12px;
+                gap: 8px;
+                padding: 8px;
+            }
+
+            .version-number {
+                font-size: 11px;
+                padding: 3px 10px;
+            }
+
+            .input-section {
+                padding: 20px 15px;
+            }
+
+            .input-group {
+                grid-template-columns: 1fr;
+            }
+
+            .recipient-info {
+                grid-template-columns: 1fr;
+            }
+
+            .recipient-item {
+                grid-template-columns: 1fr;
+                padding: 15px;
+            }
+
+            .info-item {
+                flex-direction: row;
+                gap: 10px;
+            }
+
+            .denomination-group {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .summary-title {
+                font-size: 20px;
+            }
+
+            .total-amount {
+                font-size: 36px;
+            }
+
+            .giver-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 15px 10px;
+                border-radius: 15px;
+            }
+
+            .header h1 {
+                font-size: 20px;
+                line-height: 1.3;
+            }
+
+            .header p {
+                font-size: 13px;
+            }
+
+            .collaborators {
+                flex-direction: column;
+                gap: 6px;
+                font-size: 11px;
+            }
+
+            .input-section {
+                padding: 15px 12px;
+            }
+
+            .section-title {
+                font-size: 13px;
+            }
+
+            .form-group label {
+                font-size: 13px;
+            }
+
+            input[type="text"],
+            input[type="number"] {
+                padding: 10px;
+                font-size: 16px; /* 防止 iOS 自動縮放 */
+            }
+
+            .denomination-group {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .denomination-item {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                background: white;
+                padding: 10px;
+                border-radius: 8px;
+                border: 1px solid #dee2e6;
+            }
+
+            .denomination-item label {
+                order: -1;
+                font-size: 14px;
+                margin-bottom: 0;
+            }
+
+            .denomination-item input[type="number"] {
+                width: 80px;
+                padding: 8px;
+            }
+
+            button {
+                width: 100%;
+                padding: 12px;
+                font-size: 15px;
+            }
+
+            .btn-remove {
+                width: 100%;
+                margin-top: 10px;
+            }
+
+            .recipient-item {
+                padding: 12px;
+            }
+
+            .info-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+
+            .info-label {
+                font-size: 12px;
+            }
+
+            .info-value {
+                font-size: 14px;
+            }
+
+            .amount-value {
+                font-size: 18px;
+            }
+
+            .summary-section {
+                padding: 20px 15px;
+            }
+
+            .summary-title {
+                font-size: 18px;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .summary-card {
+                padding: 12px;
+            }
+
+            .summary-denomination {
+                font-size: 15px;
+            }
+
+            .summary-count {
+                font-size: 24px;
+            }
+
+            .total-amount {
+                font-size: 28px;
+            }
+
+            .giver-card {
+                padding: 15px;
+            }
+
+            .giver-name {
+                font-size: 18px;
+            }
+
+            .giver-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 6px;
+            }
+
+            .giver-denom-item {
+                padding: 6px 4px;
+            }
+
+            .giver-denom-label {
+                font-size: 11px;
+            }
+
+            .giver-denom-count {
+                font-size: 16px;
+            }
+
+            .subtotal-container {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .subtotal-display {
+                padding: 10px 15px;
+            }
+
+            .subtotal-label {
+                font-size: 12px;
+            }
+
+            .subtotal-amount {
+                font-size: 20px;
+            }
+
+            .btn-use-subtotal {
+                width: 100%;
+                padding: 12px;
+            }
+
+            .btn-storage {
+                font-size: 11px;
+                padding: 6px 12px;
+            }
+
+            .btn-export {
+                width: 100%;
+                font-size: 14px;
+            }
+
+            .amount-templates {
+                justify-content: flex-start;
+            }
+
+            .btn-template {
+                font-size: 11px;
+                padding: 5px 10px;
+            }
+
+            .filter-buttons {
+                flex-direction: column;
+            }
+
+            .btn-filter {
+                width: 100%;
+            }
+
+            .denomination-help-text {
+                font-size: 12px;
+                padding: 6px 10px;
+            }
+
+            .empty-state {
+                padding: 30px 15px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧧 農曆新年紅包換新鈔計算器 🧧</h1>
+            <p>輕鬆計算需要兌換的新鈔面額與數量</p>
+            <div class="collaborators">
+                <span class="collab-label">👥 協作者:</span>
+                <span class="collab-names">Ching & Claude</span>
+                <span class="version-label">📌 版本:</span>
+                <span class="version-number">v1.8.0</span>
+            </div>
+            <div class="storage-buttons">
+                <button class="btn-storage btn-save" onclick="saveData()" title="儲存資料到瀏覽器">
+                    💾 儲存資料
+                </button>
+                <button class="btn-storage btn-load" onclick="loadData()" title="載入已儲存的資料">
+                    📂 載入資料
+                </button>
+                <button class="btn-storage btn-clear" onclick="clearStorage()" title="清除所有已儲存資料">
+                    🗑️ 清除儲存
+                </button>
+            </div>
+        </div>
+
+        <div class="input-section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 style="margin: 0; color: #c92a2a;">新增紅包</h2>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <span id="dataCount" style="font-size: 14px; color: #868e96;">已有 0 筆</span>
+                    <button class="btn-clear-all" onclick="clearAllRecipients()" title="清空所有紅包資料">
+                        🗑️ 清空全部
+                    </button>
+                </div>
+            </div>
+            <div class="input-group">
+                <div class="form-group">
+                    <label>送禮人姓名 *</label>
+                    <input type="text" id="giverName" placeholder="例如: 呂小青" required>
+                </div>
+                <div class="form-group">
+                    <label>收禮人姓名 *</label>
+                    <input type="text" id="recipientName" placeholder="例如: 陳阿嬤、李伯伯" required>
+                </div>
+                <div class="form-group">
+                    <label>紅包金額 (元) *</label>
+                    <input type="number" id="amount" placeholder="例如: 2000" min="0" required>
+                    <div class="amount-templates">
+                        <button type="button" class="btn-template" onclick="setAmount(600)">600</button>
+                        <button type="button" class="btn-template" onclick="setAmount(1000)">1000</button>
+                        <button type="button" class="btn-template" onclick="setAmount(1200)">1200</button>
+                        <button type="button" class="btn-template" onclick="setAmount(1600)">1600</button>
+                        <button type="button" class="btn-template" onclick="setAmount(2000)">2000</button>
+                        <button type="button" class="btn-template" onclick="setAmount(2600)">2600</button>
+                        <button type="button" class="btn-template" onclick="setAmount(3600)">3600</button>
+                        <button type="button" class="btn-template" onclick="setAmount(6000)">6000</button>
+                    </div>
+                </div>
+                <button class="btn-add" onclick="addRecipient()">➕ 新增</button>
+            </div>
+
+            <div class="denomination-section">
+                <div class="section-title">💵 指定紙鈔張數 (選填)</div>
+                <div class="denomination-help-text">💡 說明: 自動計算會優先使用 1000、500、100 元等常用面額</div>
+                <div class="denomination-group">
+                    <div class="denomination-item">
+                        <input type="number" id="denom1000" min="0" placeholder="0" oninput="updateSubtotal()">
+                        <label>1000元 ⭐</label>
+                    </div>
+                    <div class="denomination-item">
+                        <input type="number" id="denom500" min="0" placeholder="0" oninput="updateSubtotal()">
+                        <label>500元 ⭐</label>
+                    </div>
+                    <div class="denomination-item">
+                        <input type="number" id="denom100" min="0" placeholder="0" oninput="updateSubtotal()">
+                        <label>100元 ⭐</label>
+                    </div>
+                    <div class="denomination-item">
+                        <input type="number" id="denom2000" min="0" placeholder="0" oninput="updateSubtotal()">
+                        <label>2000元</label>
+                    </div>
+                    <div class="denomination-item">
+                        <input type="number" id="denom200" min="0" placeholder="0" oninput="updateSubtotal()">
+                        <label>200元</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="denomination-section">
+                <div class="section-title">🪙 指定硬幣數量 (選填)</div>
+                <div class="denomination-group">
+                    <div class="denomination-item">
+                        <input type="number" id="denom50" min="0" placeholder="0" oninput="updateSubtotal()">
+                        <label>50元</label>
+                    </div>
+                    <div class="denomination-item">
+                        <input type="number" id="denom10" min="0" placeholder="0" oninput="updateSubtotal()">
+                        <label>10元</label>
+                    </div>
+                    <div class="denomination-item">
+                        <input type="number" id="denom5" min="0" placeholder="0" oninput="updateSubtotal()">
+                        <label>5元</label>
+                    </div>
+                    <div class="denomination-item">
+                        <input type="number" id="denom1" min="0" placeholder="0" oninput="updateSubtotal()">
+                        <label>1元</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subtotal-container">
+                <div class="subtotal-display" id="subtotalDisplay">
+                    <div class="subtotal-label">💰 指定面額小計</div>
+                    <div class="subtotal-amount" id="subtotalAmount">NT$ 0</div>
+                </div>
+                <button class="btn-use-subtotal" onclick="useSubtotalAsAmount()" id="useSubtotalBtn" disabled>
+                    ⬆️ 使用此金額
+                </button>
+            </div>
+        </div>
+
+        <div class="search-filter-section">
+            <h3 style="margin-bottom: 15px; color: #495057;">🔍 搜尋與篩選</h3>
+            <div class="search-filter-controls">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="搜尋送禮人或收禮人..." oninput="filterRecipients()">
+                </div>
+                <div class="filter-buttons">
+                    <button class="btn-filter" onclick="sortRecipients('giver')">📤 送禮人排序</button>
+                    <button class="btn-filter" onclick="sortRecipients('recipient')">📥 收禮人排序</button>
+                    <button class="btn-filter" onclick="sortRecipients('amount')">💰 金額排序</button>
+                    <button class="btn-filter active" onclick="resetFilter()">🔄 重置</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="recipient-list" id="recipientList">
+            <div class="empty-state">尚未新增任何紅包,請在上方新增</div>
+        </div>
+
+        <div class="naming-reminder">
+            <div class="reminder-icon">⚠️</div>
+            <div class="reminder-content">
+                <div class="reminder-title">稱謂提醒</div>
+                <div class="reminder-text">
+                    請注意稱謂的正確性與關係性,建議使用具體姓名或綽號代表,以免稱謂相同造成統計錯誤。例如:多位送禮人都填「媽媽」作為收禮人,系統會視為同一人而合併統計。
+                </div>
+            </div>
+        </div>
+
+        <div class="privacy-notice">
+            <div class="privacy-icon">🔒</div>
+            <div class="privacy-content">
+                <div class="privacy-title">隱私保證</div>
+                <div class="privacy-text">
+                    您的資料僅儲存在<strong>您的裝置</strong>上,不會上傳到任何伺服器。其他人或其他裝置完全無法存取您的資料,請放心使用。
+                </div>
+            </div>
+        </div>
+
+        <div class="summary-section" id="recipientSummary" style="display: none;">
+            <div class="summary-title">👨‍👩‍👧‍👦 各收禮人統計</div>
+            <div id="recipientSummaryContent"></div>
+        </div>
+
+        <div class="summary-section" id="giverSummary" style="display: none;">
+            <div class="summary-title">👤 各送禮人換鈔統計</div>
+            <div id="giverSummaryContent"></div>
+        </div>
+
+        <div class="summary-section" id="summary" style="display: none;">
+            <div class="summary-title">📊 總計 - 需要兌換的新鈔/硬幣統計</div>
+            
+            <div class="summary-categories">
+                <div class="category-section" id="billSection" style="display: none;">
+                    <div class="category-title">💵 紙鈔</div>
+                    <div class="summary-grid" id="billGrid"></div>
+                </div>
+                
+                <div class="category-section" id="coinSection" style="display: none;">
+                    <div class="category-title">🪙 硬幣</div>
+                    <div class="summary-grid" id="coinGrid"></div>
+                </div>
+            </div>
+
+            <div class="summary-total">
+                <div class="total-label">紅包總金額</div>
+                <div class="total-amount" id="totalAmount">NT$ 0</div>
+            </div>
+
+            <div class="export-buttons">
+                <button class="btn-export btn-export-text" onclick="exportAsText()">
+                    📋 匯出純文字
+                </button>
+                <button class="btn-export btn-export-excel" onclick="exportAsExcel()">
+                    📊 匯出Excel
+                </button>
+                <button class="btn-export btn-export-print" onclick="printSummary()">
+                    🖨️ 列印統計
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script>
+        let recipients = [];
+
+        // 頁面載入時自動載入儲存的資料
+        window.addEventListener('DOMContentLoaded', function() {
+            autoLoadData();
+        });
+
+        // 自動載入資料
+        function autoLoadData() {
+            try {
+                const saved = localStorage.getItem('redEnvelopeData');
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    recipients = data.recipients || [];
+                    if (recipients.length > 0) {
+                        renderRecipients();
+                        renderRecipientSummary();
+                        renderGiverSummary();
+                        renderSummary();
+                        updateDataCount();
+                        console.log('已自動載入儲存的資料');
+                    }
+                }
+            } catch (error) {
+                console.error('自動載入資料失敗:', error);
+            }
+        }
+
+        // 儲存資料到 localStorage
+        function saveData() {
+            try {
+                const data = {
+                    recipients: recipients,
+                    savedAt: new Date().toISOString()
+                };
+                localStorage.setItem('redEnvelopeData', JSON.stringify(data));
+                alert('✅ 資料已儲存!\n\n下次開啟頁面會自動載入。');
+            } catch (error) {
+                console.error('儲存失敗:', error);
+                alert('❌ 儲存失敗,請稍後再試。');
+            }
+        }
+
+        // 載入資料
+        function loadData() {
+            try {
+                const saved = localStorage.getItem('redEnvelopeData');
+                if (!saved) {
+                    alert('📭 沒有找到已儲存的資料。');
+                    return;
+                }
+
+                const data = JSON.parse(saved);
+                const savedTime = new Date(data.savedAt).toLocaleString('zh-TW');
+                
+                if (confirm(`發現儲存的資料:\n儲存時間: ${savedTime}\n共 ${data.recipients.length} 筆紅包記錄\n\n是否載入? (會覆蓋目前資料)`)) {
+                    recipients = data.recipients || [];
+                    renderRecipients();
+                    renderRecipientSummary();
+                    renderGiverSummary();
+                    renderSummary();
+                    updateDataCount();
+                    alert('✅ 資料已載入!');
+                }
+            } catch (error) {
+                console.error('載入失敗:', error);
+                alert('❌ 載入失敗,資料可能已損壞。');
+            }
+        }
+
+        // 清除儲存的資料
+        function clearStorage() {
+            if (confirm('⚠️ 確定要清除所有已儲存的資料嗎?\n\n此操作無法復原!')) {
+                try {
+                    localStorage.removeItem('redEnvelopeData');
+                    alert('✅ 已清除儲存的資料。');
+                } catch (error) {
+                    console.error('清除失敗:', error);
+                    alert('❌ 清除失敗。');
+                }
+            }
+        }
+
+        // 匯出純文字
+        function exportAsText() {
+            if (recipients.length === 0) {
+                alert('⚠️ 目前沒有任何紅包資料可以匯出。');
+                return;
+            }
+
+            // 計算總計
+            const totals = { 2000: 0, 1000: 0, 500: 0, 200: 0, 100: 0, 50: 0, 10: 0, 5: 0, 1: 0 };
+            let totalAmount = 0;
+
+            recipients.forEach(recipient => {
+                totalAmount += recipient.amount;
+                Object.entries(recipient.denominations).forEach(([denom, count]) => {
+                    totals[denom] += count;
+                });
+            });
+
+            // 生成文字
+            let text = '🧧 農曆新年紅包換新鈔統計 🧧\n';
+            text += '=' .repeat(40) + '\n\n';
+            text += `📅 匯出時間: ${new Date().toLocaleString('zh-TW')}\n`;
+            text += `📊 紅包總數: ${recipients.length} 個\n`;
+            text += `💰 總金額: NT$ ${totalAmount.toLocaleString()}\n\n`;
+            text += '=' .repeat(40) + '\n';
+            text += '💵 需要兌換的新鈔/硬幣統計\n';
+            text += '=' .repeat(40) + '\n\n';
+
+            // 紙鈔
+            const bills = Object.entries(totals)
+                .filter(([denom, _]) => parseInt(denom) >= 100)
+                .filter(([_, count]) => count > 0);
+
+            if (bills.length > 0) {
+                text += '【紙鈔】\n';
+                bills.forEach(([denom, count]) => {
+                    text += `  ${denom} 元 × ${count} 張\n`;
+                });
+                text += '\n';
+            }
+
+            // 硬幣
+            const coins = Object.entries(totals)
+                .filter(([denom, _]) => parseInt(denom) < 100)
+                .filter(([_, count]) => count > 0);
+
+            if (coins.length > 0) {
+                text += '【硬幣】\n';
+                coins.forEach(([denom, count]) => {
+                    text += `  ${denom} 元 × ${count} 枚\n`;
+                });
+                text += '\n';
+            }
+
+            text += '=' .repeat(40) + '\n';
+            text += '協作者: Ching & Claude\n';
+            text += '工具: 農曆新年紅包換新鈔計算器\n';
+
+            // 複製到剪貼簿
+            navigator.clipboard.writeText(text).then(() => {
+                alert('✅ 已複製到剪貼簿!\n\n可以直接貼到 LINE、Email 或記事本。');
+            }).catch(() => {
+                // 如果複製失敗,顯示文字讓使用者手動複製
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.select();
+                try {
+                    document.execCommand('copy');
+                    alert('✅ 已複製到剪貼簿!');
+                } catch (err) {
+                    alert('文字內容:\n\n' + text);
+                }
+                document.body.removeChild(textarea);
+            });
+        }
+
+        // 匯出Excel
+        function exportAsExcel() {
+            if (recipients.length === 0) {
+                alert('⚠️ 目前沒有任何紅包資料可以匯出。');
+                return;
+            }
+
+            // 建立工作簿
+            const wb = XLSX.utils.book_new();
+
+            // 工作表1: 紅包明細
+            const detailData = [
+                ['農曆新年紅包明細表'],
+                ['匯出時間', new Date().toLocaleString('zh-TW')],
+                [],
+                ['送禮人', '收禮人', '金額', '2000元', '1000元', '500元', '200元', '100元', '50元', '10元', '5元', '1元']
+            ];
+
+            recipients.forEach(r => {
+                detailData.push([
+                    r.giverName,
+                    r.recipientName,
+                    r.amount,
+                    r.denominations[2000] || 0,
+                    r.denominations[1000] || 0,
+                    r.denominations[500] || 0,
+                    r.denominations[200] || 0,
+                    r.denominations[100] || 0,
+                    r.denominations[50] || 0,
+                    r.denominations[10] || 0,
+                    r.denominations[5] || 0,
+                    r.denominations[1] || 0
+                ]);
+            });
+
+            const ws1 = XLSX.utils.aoa_to_sheet(detailData);
+            XLSX.utils.book_append_sheet(wb, ws1, '紅包明細');
+
+            // 工作表2: 送禮人統計
+            const giverStats = {};
+            recipients.forEach(r => {
+                if (!giverStats[r.giverName]) {
+                    giverStats[r.giverName] = {
+                        totalAmount: 0,
+                        denominations: { 2000: 0, 1000: 0, 500: 0, 200: 0, 100: 0, 50: 0, 10: 0, 5: 0, 1: 0 }
+                    };
+                }
+                giverStats[r.giverName].totalAmount += r.amount;
+                Object.entries(r.denominations).forEach(([denom, count]) => {
+                    giverStats[r.giverName].denominations[denom] += count;
+                });
+            });
+
+            const giverData = [
+                ['送禮人統計'],
+                [],
+                ['送禮人', '總金額', '2000元', '1000元', '500元', '200元', '100元', '50元', '10元', '5元', '1元']
+            ];
+
+            Object.entries(giverStats).forEach(([name, stats]) => {
+                giverData.push([
+                    name,
+                    stats.totalAmount,
+                    stats.denominations[2000] || 0,
+                    stats.denominations[1000] || 0,
+                    stats.denominations[500] || 0,
+                    stats.denominations[200] || 0,
+                    stats.denominations[100] || 0,
+                    stats.denominations[50] || 0,
+                    stats.denominations[10] || 0,
+                    stats.denominations[5] || 0,
+                    stats.denominations[1] || 0
+                ]);
+            });
+
+            const ws2 = XLSX.utils.aoa_to_sheet(giverData);
+            XLSX.utils.book_append_sheet(wb, ws2, '送禮人統計');
+
+            // 工作表3: 收禮人統計
+            const recipientStats = {};
+            recipients.forEach(r => {
+                if (!recipientStats[r.recipientName]) {
+                    recipientStats[r.recipientName] = {
+                        totalAmount: 0,
+                        denominations: { 2000: 0, 1000: 0, 500: 0, 200: 0, 100: 0, 50: 0, 10: 0, 5: 0, 1: 0 }
+                    };
+                }
+                recipientStats[r.recipientName].totalAmount += r.amount;
+                Object.entries(r.denominations).forEach(([denom, count]) => {
+                    recipientStats[r.recipientName].denominations[denom] += count;
+                });
+            });
+
+            const recipientData = [
+                ['收禮人統計'],
+                [],
+                ['收禮人', '總金額', '2000元', '1000元', '500元', '200元', '100元', '50元', '10元', '5元', '1元']
+            ];
+
+            Object.entries(recipientStats).forEach(([name, stats]) => {
+                recipientData.push([
+                    name,
+                    stats.totalAmount,
+                    stats.denominations[2000] || 0,
+                    stats.denominations[1000] || 0,
+                    stats.denominations[500] || 0,
+                    stats.denominations[200] || 0,
+                    stats.denominations[100] || 0,
+                    stats.denominations[50] || 0,
+                    stats.denominations[10] || 0,
+                    stats.denominations[5] || 0,
+                    stats.denominations[1] || 0
+                ]);
+            });
+
+            const ws3 = XLSX.utils.aoa_to_sheet(recipientData);
+            XLSX.utils.book_append_sheet(wb, ws3, '收禮人統計');
+
+            // 工作表4: 總計統計
+            const totals = { 2000: 0, 1000: 0, 500: 0, 200: 0, 100: 0, 50: 0, 10: 0, 5: 0, 1: 0 };
+            let totalAmount = 0;
+
+            recipients.forEach(r => {
+                totalAmount += r.amount;
+                Object.entries(r.denominations).forEach(([denom, count]) => {
+                    totals[denom] += count;
+                });
+            });
+
+            const summaryData = [
+                ['總計統計'],
+                ['紅包總數', recipients.length],
+                ['紅包總金額', totalAmount],
+                [],
+                ['面額', '數量', '單位', '小計']
+            ];
+
+            Object.entries(totals).forEach(([denom, count]) => {
+                if (count > 0) {
+                    const unit = parseInt(denom) >= 100 ? '張' : '枚';
+                    summaryData.push([
+                        `${denom}元`,
+                        count,
+                        unit,
+                        parseInt(denom) * count
+                    ]);
+                }
+            });
+
+            const ws4 = XLSX.utils.aoa_to_sheet(summaryData);
+            XLSX.utils.book_append_sheet(wb, ws4, '總計統計');
+
+            // 下載檔案
+            const filename = `紅包換鈔統計_${new Date().toISOString().slice(0,10)}.xlsx`;
+            XLSX.writeFile(wb, filename);
+        }
+
+        // 即時更新指定面額小計
+        function updateSubtotal() {
+            const subtotal = 
+                (parseInt(document.getElementById('denom2000').value) || 0) * 2000 +
+                (parseInt(document.getElementById('denom1000').value) || 0) * 1000 +
+                (parseInt(document.getElementById('denom500').value) || 0) * 500 +
+                (parseInt(document.getElementById('denom200').value) || 0) * 200 +
+                (parseInt(document.getElementById('denom100').value) || 0) * 100 +
+                (parseInt(document.getElementById('denom50').value) || 0) * 50 +
+                (parseInt(document.getElementById('denom10').value) || 0) * 10 +
+                (parseInt(document.getElementById('denom5').value) || 0) * 5 +
+                (parseInt(document.getElementById('denom1').value) || 0) * 1;
+
+            document.getElementById('subtotalAmount').textContent = `NT$ ${subtotal.toLocaleString()}`;
+            
+            // 啟用/停用「使用此金額」按鈕
+            const useBtn = document.getElementById('useSubtotalBtn');
+            if (subtotal > 0) {
+                useBtn.disabled = false;
+            } else {
+                useBtn.disabled = true;
+            }
+        }
+
+        // 使用小計金額作為紅包金額
+        function useSubtotalAsAmount() {
+            const subtotal = 
+                (parseInt(document.getElementById('denom2000').value) || 0) * 2000 +
+                (parseInt(document.getElementById('denom1000').value) || 0) * 1000 +
+                (parseInt(document.getElementById('denom500').value) || 0) * 500 +
+                (parseInt(document.getElementById('denom200').value) || 0) * 200 +
+                (parseInt(document.getElementById('denom100').value) || 0) * 100 +
+                (parseInt(document.getElementById('denom50').value) || 0) * 50 +
+                (parseInt(document.getElementById('denom10').value) || 0) * 10 +
+                (parseInt(document.getElementById('denom5').value) || 0) * 5 +
+                (parseInt(document.getElementById('denom1').value) || 0) * 1;
+
+            if (subtotal > 0) {
+                document.getElementById('amount').value = subtotal;
+                // 自動觸發新增
+                addRecipient();
+            }
+        }
+
+        function addRecipient() {
+            const giverName = document.getElementById('giverName').value.trim();
+            const recipientName = document.getElementById('recipientName').value.trim();
+            const amount = parseInt(document.getElementById('amount').value);
+
+            // 表單驗證
+            if (!giverName) {
+                alert('⚠️ 請輸入送禮人姓名');
+                document.getElementById('giverName').focus();
+                return;
+            }
+
+            if (!recipientName) {
+                alert('⚠️ 請輸入收禮人姓名');
+                document.getElementById('recipientName').focus();
+                return;
+            }
+
+            if (!amount || amount <= 0) {
+                alert('⚠️ 請輸入有效的紅包金額');
+                document.getElementById('amount').focus();
+                return;
+            }
+
+            // 檢查是否已存在相同的送禮人+收禮人組合
+            const existingIndex = recipients.findIndex(r => 
+                r.giverName === giverName && r.recipientName === recipientName
+            );
+
+            if (existingIndex !== -1) {
+                const existingAmount = recipients[existingIndex].amount;
+                const confirmMessage = `⚠️ 警告:\n\n送禮人「${giverName}」已經有給「${recipientName}」的紅包記錄了!\n原金額: NT$ ${existingAmount.toLocaleString()}\n新金額: NT$ ${amount.toLocaleString()}\n\n是否要新增這筆重複的紅包記錄?`;
+                
+                if (!confirm(confirmMessage)) {
+                    return; // 使用者選擇取消
+                }
+            }
+
+            // 取得指定面額
+            const customDenoms = {
+                2000: parseInt(document.getElementById('denom2000').value) || 0,
+                1000: parseInt(document.getElementById('denom1000').value) || 0,
+                500: parseInt(document.getElementById('denom500').value) || 0,
+                200: parseInt(document.getElementById('denom200').value) || 0,
+                100: parseInt(document.getElementById('denom100').value) || 0,
+                50: parseInt(document.getElementById('denom50').value) || 0,
+                10: parseInt(document.getElementById('denom10').value) || 0,
+                5: parseInt(document.getElementById('denom5').value) || 0,
+                1: parseInt(document.getElementById('denom1').value) || 0
+            };
+
+            // 檢查指定面額是否符合金額
+            const customTotal = customDenoms[2000] * 2000 + customDenoms[1000] * 1000 + 
+                              customDenoms[500] * 500 + customDenoms[200] * 200 + 
+                              customDenoms[100] * 100 + customDenoms[50] * 50 +
+                              customDenoms[10] * 10 + customDenoms[5] * 5 + 
+                              customDenoms[1] * 1;
+
+            let denominations;
+            if (customTotal > 0) {
+                if (customTotal !== amount) {
+                    alert(`指定的面額總和 (${customTotal}元) 與紅包金額 (${amount}元) 不符!`);
+                    return;
+                }
+                denominations = customDenoms;
+            } else {
+                // 自動計算最佳面額組合
+                denominations = calculateDenominations(amount);
+            }
+
+            recipients.push({
+                giverName,
+                recipientName,
+                amount,
+                denominations
+            });
+
+            // 清空輸入欄位
+            document.getElementById('giverName').value = '';
+            document.getElementById('recipientName').value = '';
+            document.getElementById('amount').value = '';
+            document.getElementById('denom2000').value = '';
+            document.getElementById('denom1000').value = '';
+            document.getElementById('denom500').value = '';
+            document.getElementById('denom200').value = '';
+            document.getElementById('denom100').value = '';
+            document.getElementById('denom50').value = '';
+            document.getElementById('denom10').value = '';
+            document.getElementById('denom5').value = '';
+            document.getElementById('denom1').value = '';
+            
+            // 清空小計
+            updateSubtotal();
+
+            renderRecipients();
+            renderRecipientSummary();
+            renderGiverSummary();
+            renderSummary();
+            updateDataCount();
+        }
+
+        function calculateDenominations(amount) {
+            const denoms = { 2000: 0, 1000: 0, 500: 0, 200: 0, 100: 0, 50: 0, 10: 0, 5: 0, 1: 0 };
+            let remaining = amount;
+
+            // 台灣常用面額優先策略:
+            // 優先使用: 1000、500、100 (市面流通廣)
+            // 避免使用: 2000、200 (較少流通)
+
+            // 先用1000元 (最常見大鈔)
+            denoms[1000] = Math.floor(remaining / 1000);
+            remaining %= 1000;
+
+            // 再用500元 (常見中額)
+            denoms[500] = Math.floor(remaining / 500);
+            remaining %= 500;
+
+            // 接著用100元 (最常見小鈔)
+            denoms[100] = Math.floor(remaining / 100);
+            remaining %= 100;
+
+            // 最後才用硬幣
+            denoms[50] = Math.floor(remaining / 50);
+            remaining %= 50;
+
+            denoms[10] = Math.floor(remaining / 10);
+            remaining %= 10;
+
+            denoms[5] = Math.floor(remaining / 5);
+            remaining %= 5;
+
+            denoms[1] = remaining;
+
+            // 2000元和200元保持為0 (不自動使用)
+            // 使用者可手動指定這些面額
+
+            return denoms;
+        }
+
+        // 設定金額範本
+        function setAmount(amount) {
+            document.getElementById('amount').value = amount;
+            document.getElementById('amount').focus();
+        }
+
+        // 快速複製紅包
+        function copyRecipient(index) {
+            const original = recipients[index];
+            document.getElementById('giverName').value = original.giverName;
+            document.getElementById('recipientName').value = original.recipientName;
+            document.getElementById('amount').value = original.amount;
+            
+            // 捲動到輸入區域
+            document.querySelector('.input-section').scrollIntoView({ behavior: 'smooth' });
+            
+            // 提示使用者
+            setTimeout(() => {
+                alert('✅ 已複製資料到輸入欄位!\n\n可以修改後再新增。');
+            }, 300);
+        }
+
+        // 搜尋篩選紅包
+        let currentFilter = null;
+        let currentSort = null;
+
+        function filterRecipients() {
+            const searchText = document.getElementById('searchInput').value.toLowerCase();
+            currentFilter = searchText;
+            applyFilterAndSort();
+        }
+
+        function sortRecipients(type) {
+            // 更新按鈕狀態
+            document.querySelectorAll('.btn-filter').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            currentSort = type;
+            applyFilterAndSort();
+        }
+
+        function resetFilter() {
+            document.getElementById('searchInput').value = '';
+            currentFilter = null;
+            currentSort = null;
+            
+            // 更新按鈕狀態
+            document.querySelectorAll('.btn-filter').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            renderRecipients();
+        }
+
+        function applyFilterAndSort() {
+            let filtered = [...recipients];
+
+            // 搜尋篩選
+            if (currentFilter) {
+                filtered = filtered.filter((r, index) => {
+                    r._originalIndex = index; // 保存原始索引
+                    return r.giverName.toLowerCase().includes(currentFilter) ||
+                           r.recipientName.toLowerCase().includes(currentFilter);
+                });
+            } else {
+                filtered.forEach((r, index) => {
+                    r._originalIndex = index;
+                });
+            }
+
+            // 排序
+            if (currentSort === 'giver') {
+                filtered.sort((a, b) => a.giverName.localeCompare(b.giverName, 'zh-TW'));
+            } else if (currentSort === 'recipient') {
+                filtered.sort((a, b) => a.recipientName.localeCompare(b.recipientName, 'zh-TW'));
+            } else if (currentSort === 'amount') {
+                filtered.sort((a, b) => b.amount - a.amount);
+            }
+
+            // 顯示結果
+            const list = document.getElementById('recipientList');
+
+            if (filtered.length === 0) {
+                if (currentFilter) {
+                    list.innerHTML = '<div class="empty-state">🔍 找不到符合的紅包資料</div>';
+                } else {
+                    list.innerHTML = '<div class="empty-state">尚未新增任何紅包,請在上方新增</div>';
+                }
+                return;
+            }
+
+            list.innerHTML = filtered.map((recipient) => {
+                const index = recipient._originalIndex;
+                const denomText = Object.entries(recipient.denominations)
+                    .filter(([_, count]) => count > 0)
+                    .map(([denom, count]) => `${denom}元×${count}${parseInt(denom) >= 100 ? '張' : '枚'}`)
+                    .join(' + ');
+
+                return `
+                    <div class="recipient-item">
+                        <div class="recipient-info">
+                            <div class="info-item">
+                                <span class="info-label">送禮人:</span>
+                                <span class="info-value">${recipient.giverName}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">收禮人:</span>
+                                <span class="info-value">${recipient.recipientName}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">金額:</span>
+                                <span class="amount-value">NT$ ${recipient.amount.toLocaleString()}</span>
+                            </div>
+                            <div class="info-item" style="grid-column: 1 / -1;">
+                                <span class="info-label">面額:</span>
+                                <span class="info-value">${denomText}</span>
+                            </div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <button class="btn-copy" onclick="copyRecipient(${index})" title="快速複製此筆資料">
+                                📋 複製
+                            </button>
+                            <button class="btn-remove" onclick="removeRecipient(${index})">❌ 刪除</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 列印統計
+        function printSummary() {
+            if (recipients.length === 0) {
+                alert('⚠️ 目前沒有任何紅包資料可以列印。');
+                return;
+            }
+
+            // 計算總計
+            const totals = { 2000: 0, 1000: 0, 500: 0, 200: 0, 100: 0, 50: 0, 10: 0, 5: 0, 1: 0 };
+            let totalAmount = 0;
+
+            recipients.forEach(recipient => {
+                totalAmount += recipient.amount;
+                Object.entries(recipient.denominations).forEach(([denom, count]) => {
+                    totals[denom] += count;
+                });
+            });
+
+            // 生成列印內容
+            let printContent = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <title>紅包換新鈔統計表</title>
+                    <style>
+                        body {
+                            font-family: "Microsoft JhengHei", Arial, sans-serif;
+                            padding: 30px;
+                            max-width: 800px;
+                            margin: 0 auto;
+                        }
+                        h1 {
+                            text-align: center;
+                            color: #c92a2a;
+                            border-bottom: 3px solid #c92a2a;
+                            padding-bottom: 15px;
+                        }
+                        .info {
+                            margin: 20px 0;
+                            font-size: 14px;
+                            color: #666;
+                        }
+                        table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            margin: 20px 0;
+                        }
+                        th, td {
+                            border: 1px solid #ddd;
+                            padding: 12px;
+                            text-align: center;
+                        }
+                        th {
+                            background: #f8f9fa;
+                            font-weight: bold;
+                            color: #495057;
+                        }
+                        .total-row {
+                            background: #fff3cd;
+                            font-weight: bold;
+                        }
+                        .summary {
+                            background: #e7f5ff;
+                            padding: 20px;
+                            border-radius: 10px;
+                            margin-top: 30px;
+                        }
+                        .summary h2 {
+                            color: #1864ab;
+                            margin-top: 0;
+                        }
+                        .footer {
+                            text-align: center;
+                            margin-top: 40px;
+                            font-size: 12px;
+                            color: #868e96;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <h1>🧧 農曆新年紅包換新鈔統計表</h1>
+                    
+                    <div class="info">
+                        <p>📅 列印時間: ${new Date().toLocaleString('zh-TW')}</p>
+                        <p>📊 紅包總數: ${recipients.length} 個</p>
+                        <p>💰 紅包總金額: NT$ ${totalAmount.toLocaleString()}</p>
+                    </div>
+
+                    <h2>需要兌換的新鈔/硬幣明細</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>面額</th>
+                                <th>數量</th>
+                                <th>單位</th>
+                                <th>小計</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            // 紙鈔
+            Object.entries(totals)
+                .filter(([denom, _]) => parseInt(denom) >= 100)
+                .filter(([_, count]) => count > 0)
+                .forEach(([denom, count]) => {
+                    printContent += `
+                        <tr>
+                            <td>${denom} 元</td>
+                            <td>${count}</td>
+                            <td>張</td>
+                            <td>NT$ ${(parseInt(denom) * count).toLocaleString()}</td>
+                        </tr>
+                    `;
+                });
+
+            // 硬幣
+            Object.entries(totals)
+                .filter(([denom, _]) => parseInt(denom) < 100)
+                .filter(([_, count]) => count > 0)
+                .forEach(([denom, count]) => {
+                    printContent += `
+                        <tr>
+                            <td>${denom} 元</td>
+                            <td>${count}</td>
+                            <td>枚</td>
+                            <td>NT$ ${(parseInt(denom) * count).toLocaleString()}</td>
+                        </tr>
+                    `;
+                });
+
+            printContent += `
+                            <tr class="total-row">
+                                <td colspan="3">總計</td>
+                                <td>NT$ ${totalAmount.toLocaleString()}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="summary">
+                        <h2>📝 使用說明</h2>
+                        <p>請攜帶此表格到銀行櫃台,告知需要兌換的各面額新鈔/硬幣數量。</p>
+                        <p>建議提前預約或選擇離峰時段前往,以縮短等候時間。</p>
+                    </div>
+
+                    <div class="footer">
+                        <p>協作者: Ching & Claude</p>
+                        <p>工具: 農曆新年紅包換新鈔計算器</p>
+                    </div>
+                </body>
+                </html>
+            `;
+
+            // 開啟列印視窗
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(printContent);
+            printWindow.document.close();
+            printWindow.focus();
+            
+            // 等待載入完成後列印
+            setTimeout(() => {
+                printWindow.print();
+            }, 250);
+        }
+
+        // 清空所有紅包資料
+        function clearAllRecipients() {
+            if (recipients.length === 0) {
+                alert('📭 目前沒有任何紅包資料。');
+                return;
+            }
+
+            if (confirm(`⚠️ 確定要清空所有 ${recipients.length} 筆紅包資料嗎?\n\n此操作無法復原!\n(已儲存的資料不會被清除)`)) {
+                recipients = [];
+                renderRecipients();
+                renderRecipientSummary();
+                renderGiverSummary();
+                renderSummary();
+                updateDataCount();
+                alert('✅ 已清空所有紅包資料。');
+            }
+        }
+
+        // 更新資料數量顯示
+        function updateDataCount() {
+            const countEl = document.getElementById('dataCount');
+            if (countEl) {
+                countEl.textContent = `已有 ${recipients.length} 筆`;
+            }
+        }
+
+        function removeRecipient(index) {
+            recipients.splice(index, 1);
+            renderRecipients();
+            renderRecipientSummary();
+            renderGiverSummary();
+            renderSummary();
+            updateDataCount();
+        }
+
+        function renderRecipients() {
+            const list = document.getElementById('recipientList');
+
+            if (recipients.length === 0) {
+                list.innerHTML = '<div class="empty-state">尚未新增任何紅包,請在上方新增</div>';
+                return;
+            }
+
+            list.innerHTML = recipients.map((recipient, index) => {
+                const denomText = Object.entries(recipient.denominations)
+                    .filter(([_, count]) => count > 0)
+                    .map(([denom, count]) => `${denom}元×${count}${parseInt(denom) >= 100 ? '張' : '枚'}`)
+                    .join(' + ');
+
+                return `
+                    <div class="recipient-item">
+                        <div class="recipient-info">
+                            <div class="info-item">
+                                <span class="info-label">送禮人:</span>
+                                <span class="info-value">${recipient.giverName}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">收禮人:</span>
+                                <span class="info-value">${recipient.recipientName}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">金額:</span>
+                                <span class="amount-value">NT$ ${recipient.amount.toLocaleString()}</span>
+                            </div>
+                            <div class="info-item" style="grid-column: 1 / -1;">
+                                <span class="info-label">面額:</span>
+                                <span class="info-value">${denomText}</span>
+                            </div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <button class="btn-copy" onclick="copyRecipient(${index})" title="快速複製此筆資料">
+                                📋 複製
+                            </button>
+                            <button class="btn-remove" onclick="removeRecipient(${index})">❌ 刪除</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderRecipientSummary() {
+            const recipientSummary = document.getElementById('recipientSummary');
+            const recipientSummaryContent = document.getElementById('recipientSummaryContent');
+
+            if (recipients.length === 0) {
+                recipientSummary.style.display = 'none';
+                return;
+            }
+
+            recipientSummary.style.display = 'block';
+
+            // 按收禮人分組統計
+            const recipientStats = {};
+            
+            recipients.forEach(recipient => {
+                if (!recipientStats[recipient.recipientName]) {
+                    recipientStats[recipient.recipientName] = {
+                        totalAmount: 0,
+                        denominations: { 2000: 0, 1000: 0, 500: 0, 200: 0, 100: 0, 50: 0, 10: 0, 5: 0, 1: 0 },
+                        giverDetails: {}
+                    };
+                }
+                
+                recipientStats[recipient.recipientName].totalAmount += recipient.amount;
+                
+                // 累計送禮人金額
+                if (!recipientStats[recipient.recipientName].giverDetails[recipient.giverName]) {
+                    recipientStats[recipient.recipientName].giverDetails[recipient.giverName] = 0;
+                }
+                recipientStats[recipient.recipientName].giverDetails[recipient.giverName] += recipient.amount;
+                
+                Object.entries(recipient.denominations).forEach(([denom, count]) => {
+                    recipientStats[recipient.recipientName].denominations[denom] += count;
+                });
+            });
+
+            // 生成每個收禮人的統計卡片
+            recipientSummaryContent.innerHTML = Object.entries(recipientStats).map(([recipientName, stats]) => {
+                // 生成送禮人明細
+                const giverSummaryHTML = Object.entries(stats.giverDetails)
+                    .map(([giverName, amount]) => `
+                        <div class="giver-summary">
+                            ← <span class="giver-summary-name">${giverName}</span> 
+                            <span class="giver-summary-amount">NT$ ${amount.toLocaleString()}</span>
+                        </div>
+                    `).join('');
+
+                const bills = Object.entries(stats.denominations)
+                    .filter(([denom, _]) => parseInt(denom) >= 100)
+                    .filter(([_, count]) => count > 0);
+
+                const coins = Object.entries(stats.denominations)
+                    .filter(([denom, _]) => parseInt(denom) < 100)
+                    .filter(([_, count]) => count > 0);
+
+                let billsHTML = '';
+                if (bills.length > 0) {
+                    billsHTML = `
+                        <div class="recipient-bill-section">
+                            <div class="recipient-category-title">💵 紙鈔</div>
+                            <div class="recipient-grid">
+                                ${bills.map(([denom, count]) => `
+                                    <div class="recipient-denom-item">
+                                        <div class="recipient-denom-label">${denom}元</div>
+                                        <div class="recipient-denom-count">${count}張</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                let coinsHTML = '';
+                if (coins.length > 0) {
+                    coinsHTML = `
+                        <div class="recipient-coin-section">
+                            <div class="recipient-category-title">🪙 硬幣</div>
+                            <div class="recipient-grid">
+                                ${coins.map(([denom, count]) => `
+                                    <div class="recipient-denom-item">
+                                        <div class="recipient-denom-label">${denom}元</div>
+                                        <div class="recipient-denom-count">${count}枚</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                return `
+                    <div class="recipient-card">
+                        <div class="recipient-name">🎁 ${recipientName}</div>
+                        <div class="recipient-givers">
+                            <div class="recipient-givers-title">📋 紅包來源</div>
+                            ${giverSummaryHTML}
+                        </div>
+                        <div class="recipient-stats">
+                            ${billsHTML}
+                            ${coinsHTML}
+                        </div>
+                        <div class="recipient-total">
+                            <div class="recipient-total-label">此人收到總額</div>
+                            <div class="recipient-total-amount">NT$ ${stats.totalAmount.toLocaleString()}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderGiverSummary() {
+            const giverSummary = document.getElementById('giverSummary');
+            const giverSummaryContent = document.getElementById('giverSummaryContent');
+
+            if (recipients.length === 0) {
+                giverSummary.style.display = 'none';
+                return;
+            }
+
+            giverSummary.style.display = 'block';
+
+            // 按送禮人分組統計
+            const giverStats = {};
+            
+            recipients.forEach(recipient => {
+                if (!giverStats[recipient.giverName]) {
+                    giverStats[recipient.giverName] = {
+                        totalAmount: 0,
+                        denominations: { 2000: 0, 1000: 0, 500: 0, 200: 0, 100: 0, 50: 0, 10: 0, 5: 0, 1: 0 },
+                        recipientDetails: {}
+                    };
+                }
+                
+                giverStats[recipient.giverName].totalAmount += recipient.amount;
+                
+                // 累計收禮人金額
+                if (!giverStats[recipient.giverName].recipientDetails[recipient.recipientName]) {
+                    giverStats[recipient.giverName].recipientDetails[recipient.recipientName] = 0;
+                }
+                giverStats[recipient.giverName].recipientDetails[recipient.recipientName] += recipient.amount;
+                
+                Object.entries(recipient.denominations).forEach(([denom, count]) => {
+                    giverStats[recipient.giverName].denominations[denom] += count;
+                });
+            });
+
+            // 生成每個送禮人的統計卡片
+            giverSummaryContent.innerHTML = Object.entries(giverStats).map(([giverName, stats]) => {
+                // 生成收禮人明細
+                const recipientSummaryHTML = Object.entries(stats.recipientDetails)
+                    .map(([recipientName, amount]) => `
+                        <div class="recipient-summary">
+                            → <span class="recipient-summary-name">${recipientName}</span> 
+                            <span class="recipient-summary-amount">NT$ ${amount.toLocaleString()}</span>
+                        </div>
+                    `).join('');
+
+                const bills = Object.entries(stats.denominations)
+                    .filter(([denom, _]) => parseInt(denom) >= 100)
+                    .filter(([_, count]) => count > 0);
+
+                const coins = Object.entries(stats.denominations)
+                    .filter(([denom, _]) => parseInt(denom) < 100)
+                    .filter(([_, count]) => count > 0);
+
+                let billsHTML = '';
+                if (bills.length > 0) {
+                    billsHTML = `
+                        <div class="giver-bill-section">
+                            <div class="giver-category-title">💵 紙鈔</div>
+                            <div class="giver-grid">
+                                ${bills.map(([denom, count]) => `
+                                    <div class="giver-denom-item">
+                                        <div class="giver-denom-label">${denom}元</div>
+                                        <div class="giver-denom-count">${count}張</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                let coinsHTML = '';
+                if (coins.length > 0) {
+                    coinsHTML = `
+                        <div class="giver-coin-section">
+                            <div class="giver-category-title">🪙 硬幣</div>
+                            <div class="giver-grid">
+                                ${coins.map(([denom, count]) => `
+                                    <div class="giver-denom-item">
+                                        <div class="giver-denom-label">${denom}元</div>
+                                        <div class="giver-denom-count">${count}枚</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                return `
+                    <div class="giver-card">
+                        <div class="giver-name">🎁 ${giverName}</div>
+                        <div class="giver-recipients">
+                            <div class="giver-recipients-title">📋 紅包明細</div>
+                            ${recipientSummaryHTML}
+                        </div>
+                        <div class="giver-stats">
+                            ${billsHTML}
+                            ${coinsHTML}
+                        </div>
+                        <div class="giver-total">
+                            <div class="giver-total-label">此人紅包總額</div>
+                            <div class="giver-total-amount">NT$ ${stats.totalAmount.toLocaleString()}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderSummary() {
+            const summary = document.getElementById('summary');
+            const billSection = document.getElementById('billSection');
+            const coinSection = document.getElementById('coinSection');
+            const billGrid = document.getElementById('billGrid');
+            const coinGrid = document.getElementById('coinGrid');
+            const totalAmountEl = document.getElementById('totalAmount');
+
+            if (recipients.length === 0) {
+                summary.style.display = 'none';
+                return;
+            }
+
+            summary.style.display = 'block';
+
+            // 計算總計
+            const totals = { 2000: 0, 1000: 0, 500: 0, 200: 0, 100: 0, 50: 0, 10: 0, 5: 0, 1: 0 };
+            let totalAmount = 0;
+
+            recipients.forEach(recipient => {
+                totalAmount += recipient.amount;
+                Object.entries(recipient.denominations).forEach(([denom, count]) => {
+                    totals[denom] += count;
+                });
+            });
+
+            // 紙鈔 (100元以上)
+            const bills = Object.entries(totals)
+                .filter(([denom, _]) => parseInt(denom) >= 100)
+                .filter(([_, count]) => count > 0);
+
+            if (bills.length > 0) {
+                billSection.style.display = 'block';
+                billGrid.innerHTML = bills
+                    .map(([denom, count]) => `
+                        <div class="summary-card">
+                            <div class="summary-denomination">${denom} 元</div>
+                            <div class="summary-count">${count} 張</div>
+                        </div>
+                    `).join('');
+            } else {
+                billSection.style.display = 'none';
+            }
+
+            // 硬幣 (50元以下)
+            const coins = Object.entries(totals)
+                .filter(([denom, _]) => parseInt(denom) < 100)
+                .filter(([_, count]) => count > 0);
+
+            if (coins.length > 0) {
+                coinSection.style.display = 'block';
+                coinGrid.innerHTML = coins
+                    .map(([denom, count]) => `
+                        <div class="summary-card">
+                            <div class="summary-denomination">${denom} 元</div>
+                            <div class="summary-count">${count} 枚</div>
+                        </div>
+                    `).join('');
+            } else {
+                coinSection.style.display = 'none';
+            }
+
+            totalAmountEl.textContent = `NT$ ${totalAmount.toLocaleString()}`;
+        }
+    </script>
+</body>
+</html>
